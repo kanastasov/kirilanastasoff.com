@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>User Accounts Management System</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+
+</head>
+
+<body>
+
+	<div class="container my-2">
+		<h1>User Accounts List</h1>
+
+		<a th:href="@{/showAccountForm}" class="btn btn-primary btn-sm mb-3">
+			Add Account </a>
+
+		<table border="1" class="table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Date of Birth</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="account : ${listUserAccounts}">
+					<td th:text="${account.firstName}"></td>
+					<td th:text="${account.lastName}"></td>
+					<td th:text="${account.email}"></td>
+					<td th:text="${account.dateOfBirth}"></td>
+					<td><a th:href="@{/showFormForUpdate/{id}(id=${account.id})}"
+						class="btn btn-primary">Update</a> <a
+						th:href="@{/deleteAccount/{id}(id=${account.id})}"
+						class="btn btn-danger">Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>
