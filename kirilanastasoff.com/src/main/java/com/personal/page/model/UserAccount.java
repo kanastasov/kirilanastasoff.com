@@ -39,7 +39,7 @@ public class UserAccount implements Serializable {
 	@Column(name = "last_name")
 	private String lastName;
 
-	@Email(message = "Email should be valid")
+//	@Email(message = "Email should be valid")
 	@Column(name = "email")
 	private String email;
 
