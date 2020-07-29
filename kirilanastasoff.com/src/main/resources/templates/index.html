@@ -2,13 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="ISO-8859-1">
-<title>User Accounts Management System</title>
-
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-	crossorigin="anonymous">
+<div th:replace="fragments/header.html :: myheader"></div>
 
 </head>
 
@@ -24,7 +18,7 @@
 			<thead>
 				<tr>
 					<th>First Name</th>
-					<th>Last Name</th>
+					<th>Last Name</th> 
 					<th>Email</th>
 					<th>Date of Birth</th>
 					<th>Actions</th>
@@ -45,5 +39,10 @@
 		</table>
 	</div>
 </body>
+<footer>
+<div th:replace="fragments/footer.html :: myfooter"></div>
+
+</footer>
+
 
 </html>
