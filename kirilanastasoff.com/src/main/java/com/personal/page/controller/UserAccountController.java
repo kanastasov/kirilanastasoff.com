@@ -41,9 +41,11 @@ public class UserAccountController {
 
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
-		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
-			bindingResult.rejectValue("email", "There is already an account with this email");
-		}
+//		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
+//			bindingResult.rejectValue("email", "There is already an account with this email");
+//		}
+		
+		
 		if (bindingResult.hasErrors()) {
 			return "newUserAccount";
 		}
@@ -64,11 +66,9 @@ public class UserAccountController {
 	}
 
 	@PostMapping("/update/{id}")
-	public String updateUserAccount(@ModelAttribute("userAccount") @PathVariable("id") long id, @Valid UserAccount userAccount, BindingResult result,
+	public String updateUserAccount(@PathVariable("id")long id, @Valid UserAccount userAccount, BindingResult result,
 			Model model) {
-		System.out.println(result + "******************************************");
 		if (result.hasErrors()) {
-			System.out.println(result + "******************************************");
 			userAccount.setId(id);
 			return "updateUserAccount";
 		}
