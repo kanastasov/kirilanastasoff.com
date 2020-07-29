@@ -47,4 +47,22 @@ public class UserAccount implements Serializable {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@JsonFormat(pattern = "MM/dd/yyyy")
 	private LocalDate dateOfBirth;
+
+	public UserAccount(long id,
+			@NotNull(message = "first name cannot be null") @Size(min = 1, max = 15) String firstName,
+			@NotNull(message = "last name cannot be null") @Size(min = 1, max = 15) String lastName,
+			 String email,
+			@NotNull(message = "date of birth cannot be null") LocalDate dateOfBirth) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public UserAccount() {
+		super();
+	}
+
 }

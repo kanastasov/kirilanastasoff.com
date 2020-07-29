@@ -25,14 +25,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="account : ${listUserAccounts}">
-					<td th:text="${account.firstName}"></td>
-					<td th:text="${account.lastName}"></td>
-					<td th:text="${account.email}"></td>
-					<td th:text="${account.dateOfBirth}"></td>
-					<td><a th:href="@{/showUserAccountForm/{id}(id=${account.id})}"
-						class="btn btn-primary">Update</a> <a
-						th:href="@{/deleteAccount/{id}(id=${account.id})}"
+				<tr th:each="userAccount : ${listUserAccounts}">
+					<td th:text="${userAccount.firstName}"></td>
+					<td th:text="${userAccount.lastName}"></td>
+					<td th:text="${userAccount.email}"></td>
+					<td th:text="${userAccount.dateOfBirth}"></td>
+					<td><a th:href="@{/edit/{id}(id=${userAccount.id})}"
+						class="btn btn-primary">Update</a> 
+						
+						<a
+						th:href="@{/deleteAccount/{id}(id=${userAccount.id})}"
 						class="btn btn-danger">Delete</a></td>
 				</tr>
 			</tbody>
