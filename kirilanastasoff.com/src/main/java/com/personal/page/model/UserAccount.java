@@ -2,17 +2,22 @@ package com.personal.page.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
+import javax.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -47,22 +52,37 @@ public class UserAccount implements Serializable {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@JsonFormat(pattern = "MM/dd/yyyy")
 	private LocalDate dateOfBirth;
+	@Column(name = "password")
+	private String password;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private Collection<Role> roles;
+
+	@Column(name = "confirmation_token")
+	private String confirmationToken;
+	
+	@Column(name = "enabled")
+	private boolean enabled;
+
+	public UserAccount() {
+		super();
+	}
 
 	public UserAccount(long id,
 			@NotNull(message = "first name cannot be null") @Size(min = 1, max = 15) String firstName,
-			@NotNull(message = "last name cannot be null") @Size(min = 1, max = 15) String lastName,
-			 String email,
-			@NotNull(message = "date of birth cannot be null") LocalDate dateOfBirth) {
+			@NotNull(message = "last name cannot be null") @Size(min = 1, max = 15) String lastName, String email,
+			@NotNull(message = "date of birth cannot be null") LocalDate dateOfBirth, String password,
+			Collection<Role> roles, String confirmationToken) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.dateOfBirth = dateOfBirth;
-	}
-
-	public UserAccount() {
-		super();
+		this.password = password;
+		this.roles = roles;
+		this.confirmationToken = confirmationToken;
 	}
 
 }

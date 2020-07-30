@@ -8,4 +8,6 @@ import com.personal.page.model.UserAccount;
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 	UserAccount findByEmail(String email);
+
+	UserAccount findByConfirmationToken(String confirmationToken);
 }

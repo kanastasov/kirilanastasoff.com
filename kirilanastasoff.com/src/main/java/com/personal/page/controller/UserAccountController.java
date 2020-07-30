@@ -3,6 +3,7 @@ package com.personal.page.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.UserAccount;
 import com.personal.page.repository.UserAccountRepository;
+import com.personal.page.service.EmailService;
 import com.personal.page.service.UserAccountService;
 
 @Controller
@@ -23,6 +25,12 @@ public class UserAccountController {
 
 	@Autowired
 	private UserAccountService userAccountService;
+
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncode;
 
 	@GetMapping("/")
 	public String showAllAcounts(Model model) {
@@ -41,11 +49,10 @@ public class UserAccountController {
 
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
-//		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
-//			bindingResult.rejectValue("email", "There is already an account with this email");
-//		}
-		
-		
+		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
+			bindingResult.rejectValue("email", "There is already an account with this email");
+		}
+
 		if (bindingResult.hasErrors()) {
 			return "newUserAccount";
 		}
@@ -66,7 +73,7 @@ public class UserAccountController {
 	}
 
 	@PostMapping("/update/{id}")
-	public String updateUserAccount(@PathVariable("id")long id, @Valid UserAccount userAccount, BindingResult result,
+	public String updateUserAccount(@PathVariable("id") long id, @Valid UserAccount userAccount, BindingResult result,
 			Model model) {
 		if (result.hasErrors()) {
 			userAccount.setId(id);
@@ -75,12 +82,19 @@ public class UserAccountController {
 
 		userAccountService.saveUserAccount(userAccount);
 		model.addAttribute("userAccount", userAccountService.getAllUserAccounts());
-		return "redirect:/";
+		return "redirect:/?success";
 	}
 
 	@GetMapping("/deleteAccount/{id}")
 	public String deleteAccount(@PathVariable(value = "id") long id) {
 		userAccountService.deleteUserAccountById(id);
 		return "redirect:/";
+	}
+
+	@GetMapping("/login")
+	public String login(Model model) {
+		UserAccount userAccount = new UserAccount();
+		model.addAttribute("userAccount", userAccount);
+		return "login";
 	}
 }

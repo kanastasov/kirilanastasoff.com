@@ -37,11 +37,6 @@
 				placeholder="Date of Birth" class="form-control mb-4 col-4">
 			<p th:if="${#fields.hasErrors('*{dateOfBirth}')}"
 				th:errors="*{dateOfBirth}">Need valid date</p>
-				
-			<input type="text" th:field="*{password}"
-				placeholder="password" class="form-control mb-4 col-4">
-			<p th:if="${#fields.hasErrors('*{password}')}"
-				th:errors="*{password}">Need valid password</p>
 
 			<button type="submit" class="btn btn-info col-2">Save
 				Account</button>

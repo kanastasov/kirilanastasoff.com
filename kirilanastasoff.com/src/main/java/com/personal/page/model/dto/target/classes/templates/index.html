@@ -11,21 +11,16 @@
 	<div class="container my-2">
 		<h1>User Accounts List</h1>
 
-		<a th:href="@{/showUserAccountForm}"
-			class="btn btn-primary btn-sm mb-3"> Add Account </a>
-		<div id="navbar" class="collapse navbar-collapse">
-			<ul class="nav navbar-nav">
-				<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
-			</ul>
-		</div>
+		<a th:href="@{/showUserAccountForm}" class="btn btn-primary btn-sm mb-3">
+			Add Account </a>
+
 		<table border="1" class="table table-striped table-responsive-md">
 			<thead>
 				<tr>
 					<th>First Name</th>
-					<th>Last Name</th>
+					<th>Last Name</th> 
 					<th>Email</th>
 					<th>Date of Birth</th>
-					<th>password</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -35,28 +30,19 @@
 					<td th:text="${userAccount.lastName}"></td>
 					<td th:text="${userAccount.email}"></td>
 					<td th:text="${userAccount.dateOfBirth}"></td>
-					<td th:text="${userAccount.password}"></td>
 					<td><a th:href="@{/edit/{id}(id=${userAccount.id})}"
-						class="btn btn-primary">Update</a> <a
+						class="btn btn-primary">Update</a> 
+						
+						<a
 						th:href="@{/deleteAccount/{id}(id=${userAccount.id})}"
-						class="btn btn-danger">Delete</a> <a th:href="@{/login}"
-						class="btn btn-primary">Login</a></td>
+						class="btn btn-danger">Delete</a></td>
 				</tr>
 			</tbody>
 		</table>
-
-		<div class="container">
-			<h2>User Registration and Login Module using Spring Boot, Spring
-				MVC, Spring Security, JPA/Hibernate and Thymeleaf</h2>
-
-			<p>
-				Welcome <span sec:authentication=="${userAccount.email}">User</span>
-			</p>
-		</div>
 	</div>
 </body>
 <footer>
-	<div th:replace="fragments/footer.html :: myfooter"></div>
+<div th:replace="fragments/footer.html :: myfooter"></div>
 
 </footer>
 
