@@ -1,42 +1,70 @@
 package com.personal.page.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.Role;
 import com.personal.page.model.UserAccount;
 import com.personal.page.model.dto.UserAccountDto;
+import com.personal.page.repository.RoleRepository;
 import com.personal.page.repository.UserAccountRepository;
 
 @Service
-public class UserAccountServiceImp implements UserAccountService {
+public class UserAccountServiceImp implements UserDetailsService, UserAccountService  {
 
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 
+	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public List<UserAccount> getAllUserAccounts() {
 		return this.userAccountRepository.findAll();
 	}
 
-	@Override
-	public void saveUserAccount(UserAccount account) {
-		this.userAccountRepository.save(account);
-
+	
+	@Autowired
+	public UserAccountServiceImp(UserAccountRepository userAccountRepository, RoleRepository roleRepository,
+			BCryptPasswordEncoder bCryptPasswordEncoder) {
+		super();
+		this.userAccountRepository = userAccountRepository;
+		this.roleRepository = roleRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
-	@Override
+
+	public UserAccount saveUserAccount(UserAccount account) {
+		account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+		account.setEnabled(true);
+		Role userRole = roleRepository.findByRole("ADMIN");
+		account.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		this.userAccountRepository.save(account);
+		return account;
+
+	}
+	
+
 	public UserAccount getUserAccountById(long id) throws UserAccountNotFoundException {
 		Optional<UserAccount> optionalAccount = this.userAccountRepository.findById(id);
 		UserAccount userAccount = null;
@@ -49,31 +77,38 @@ public class UserAccountServiceImp implements UserAccountService {
 		return userAccount;
 	}
 
-	@Override
 	public void deleteUserAccountById(long id) {
 		this.userAccountRepository.deleteById(id);
 	}
 
-	@Override
-	public UserAccount findUserAccountByEmail(String email) {
+	public UserAccount findByEmail(String email) {
 		return this.userAccountRepository.findByEmail(email);
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		UserAccount user = userAccountRepository.findByEmail(email);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		UserAccount user = userAccountRepository.findByUsername(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-				mapRolesToAuthorities(user.getRoles()));
+		 	List<GrantedAuthority> authorities = getUserAuthority((Set<Role>) user.getRoles());
+	        return buildUserForAuthentication(user, authorities);
 	}
 
-	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-	}
+	  private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
+	        Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
+	        for (Role role : userRoles) {
+	            roles.add(new SimpleGrantedAuthority(role.getRole()));
+	        }
+	        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);
+	        return grantedAuthorities;
+	    }
+	  
+	    private UserDetails buildUserForAuthentication(UserAccount user, List<GrantedAuthority> authorities) {
+	        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+	                user.isEnabled(), true, true, true, authorities);
+	    }
 
-	@Override
 	public UserAccount saveDto(UserAccountDto userAccountDto) {
 		UserAccount userAccount = new UserAccount();
 		userAccount.setFirstName(userAccountDto.getFirstName());
@@ -83,9 +118,9 @@ public class UserAccountServiceImp implements UserAccountService {
 		return this.userAccountRepository.save(userAccount);
 	}
 
-	@Override
 	public UserAccount findByConfirmationToken(String confirmationToken) {
 		return userAccountRepository.findByConfirmationToken(confirmationToken);
 	}
+	
 
 }

@@ -9,5 +9,7 @@ import com.personal.page.model.UserAccount;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 	UserAccount findByEmail(String email);
 
+	UserAccount findByUsername(String username);
+
 	UserAccount findByConfirmationToken(String confirmationToken);
 }

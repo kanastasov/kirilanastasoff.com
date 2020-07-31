@@ -18,7 +18,7 @@
        
       <div th:if="${flashUser != null}">
          <ul>
-            <li>User Name: <span th:utext="${userAccount.email}">..</span></li>
+         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
          </ul>
       </div>
       

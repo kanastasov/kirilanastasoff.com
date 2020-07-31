@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.UserAccount;
@@ -38,6 +39,13 @@ public class UserAccountController {
 		return "index";
 
 	}
+	
+    @GetMapping(value={"/", "/login"})
+    public ModelAndView login(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
 
 	// create model attribute to bind form data
 	@GetMapping("/showUserAccountForm")
@@ -49,7 +57,7 @@ public class UserAccountController {
 
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
-		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
+		if (userAccountService.findByEmail(account.getEmail()) != null) {
 			bindingResult.rejectValue("email", "There is already an account with this email");
 		}
 
@@ -91,10 +99,15 @@ public class UserAccountController {
 		return "redirect:/";
 	}
 
-	@GetMapping("/login")
-	public String login(Model model) {
-		UserAccount userAccount = new UserAccount();
-		model.addAttribute("userAccount", userAccount);
-		return "login";
+//	@GetMapping("/login")
+//	public String login(Model model) {
+//		UserAccount userAccount = new UserAccount();
+//		model.addAttribute("userAccount", userAccount);
+//		return "login";
+//	}
+
+	@GetMapping("/403")
+	public String error403() {
+		return "/error/403";
 	}
 }

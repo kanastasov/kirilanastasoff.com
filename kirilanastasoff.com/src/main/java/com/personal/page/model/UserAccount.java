@@ -16,15 +16,22 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+@Builder
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_account")
 public class UserAccount implements Serializable {
 
@@ -61,28 +68,13 @@ public class UserAccount implements Serializable {
 
 	@Column(name = "confirmation_token")
 	private String confirmationToken;
-	
+
 	@Column(name = "enabled")
 	private boolean enabled;
 
-	public UserAccount() {
-		super();
-	}
-
-	public UserAccount(long id,
-			@NotNull(message = "first name cannot be null") @Size(min = 1, max = 15) String firstName,
-			@NotNull(message = "last name cannot be null") @Size(min = 1, max = 15) String lastName, String email,
-			@NotNull(message = "date of birth cannot be null") LocalDate dateOfBirth, String password,
-			Collection<Role> roles, String confirmationToken) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.dateOfBirth = dateOfBirth;
-		this.password = password;
-		this.roles = roles;
-		this.confirmationToken = confirmationToken;
-	}
+	@Column(name = "username")
+	private String username;
+	@Column(name = "active")
+	private boolean active;
 
 }

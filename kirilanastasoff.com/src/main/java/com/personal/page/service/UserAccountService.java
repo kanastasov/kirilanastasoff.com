@@ -8,16 +8,16 @@ import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.UserAccount;
 import com.personal.page.model.dto.UserAccountDto;
 
-public interface UserAccountService extends UserDetailsService {
+public interface UserAccountService  {
 	List<UserAccount> getAllUserAccounts();
 
-	void saveUserAccount(UserAccount account);
+	UserAccount saveUserAccount(UserAccount account);
 
 	UserAccount getUserAccountById(long id) throws UserAccountNotFoundException;
 
 	void deleteUserAccountById(long id);
 
-	UserAccount findUserAccountByEmail(String email);
+	UserAccount findByEmail(String email);
 
 	UserAccount saveDto(UserAccountDto userAccountDto);
 
