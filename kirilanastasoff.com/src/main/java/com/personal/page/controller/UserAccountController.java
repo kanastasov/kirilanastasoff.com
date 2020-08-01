@@ -1,5 +1,11 @@
 package com.personal.page.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +21,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.lowagie.text.DocumentException;
 import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.UserAccount;
 import com.personal.page.service.EmailService;
+import com.personal.page.service.PdfServiceImp;
 import com.personal.page.service.UserAccountService;
 
 @Controller
@@ -31,6 +39,19 @@ public class UserAccountController {
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncode;
+
+	@Autowired
+	private PdfServiceImp pdfService;
+
+	@Autowired
+	public UserAccountController(UserAccountService userAccountService, EmailService emailService,
+			BCryptPasswordEncoder bCryptPasswordEncode, PdfServiceImp pdfService) {
+		super();
+		this.userAccountService = userAccountService;
+		this.emailService = emailService;
+		this.bCryptPasswordEncode = bCryptPasswordEncode;
+		this.pdfService = pdfService;
+	}
 
 	@GetMapping("/")
 	public String showAllAcounts(Model model) {
@@ -74,13 +95,11 @@ public class UserAccountController {
 		return "updateUserAccount";
 	}
 
-	//todo set username to null when update user
+	// todo set username to null when update user
 	@PostMapping("/update/{id}")
 	public String updateUserAccount(@PathVariable("id") long id, @Valid UserAccount userAccount, BindingResult result,
 			Model model) {
-		System.out.println(result + "******************************************");
 		if (result.hasErrors()) {
-			System.out.println(result + "******************************************");
 			userAccount.setId(id);
 			return "updateUserAccount";
 		}
@@ -112,5 +131,20 @@ public class UserAccountController {
 		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/home");
 		return modelAndView;
+	}
+
+	@GetMapping("/download-pdf")
+	public void downloadPDFResource(HttpServletResponse response) {
+		try {
+			Path file = Paths.get(pdfService.generatePdf().getAbsolutePath());
+			if (Files.exists(file)) {
+				response.setContentType("application/pdf");
+				response.addHeader("Content-Disposition", "attachment; filename=" + file.getFileName());
+				Files.copy(file, response.getOutputStream());
+				response.getOutputStream().flush();
+			}
+		} catch (DocumentException | IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }

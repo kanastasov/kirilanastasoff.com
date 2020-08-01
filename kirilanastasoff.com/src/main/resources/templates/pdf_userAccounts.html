@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Students</title>
+<bookmarks> <bookmark name="Users" href="#index"></bookmark>
+</bookmarks>
+</head>
+
+<body>
+	<img class="logo" src="images/pdflogo.jpg" />
+
+	<h1>
+		<span class="titles-style"
+			th:text="|User / Count: ${#lists.size(userAccounts)}|"></span>
+	</h1>
+	<div class="container">
+		<table border="1" class="table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Active</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${userAccounts}">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.firstName}"></td>
+					<td th:text="${user.lastName}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.active}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

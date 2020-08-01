@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
 
@@ -133,5 +135,6 @@ public class UserAccountServiceImp implements UserDetailsService, UserAccountSer
 	public UserAccount findUserAccountByEmail(String email) {
 		return userAccountRepository.findByEmail(email);
 	}
+
 
 }

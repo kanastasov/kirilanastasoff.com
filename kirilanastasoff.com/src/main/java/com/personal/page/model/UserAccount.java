@@ -2,7 +2,6 @@ package com.personal.page.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
