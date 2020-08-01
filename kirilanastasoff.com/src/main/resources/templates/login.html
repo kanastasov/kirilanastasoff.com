@@ -13,7 +13,7 @@
 <title>Registration</title>
 </head>
 <body>
-	<div th:replace="fragments/header.html :: myheader"></div>
+
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -38,6 +38,8 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 				<h1>Login page</h1>
+					<img th:src="@{/images/login.jpg}" class="img-responsive center-block"
+			width="300" height="300" alt="Logo" />
 				<form th:action="@{/login}" th:object="${userAccount}" method="post">
 					<div th:if="${param.error}">
 						<div class="alert alert-danger">Invalid username or
@@ -47,8 +49,8 @@
 						<div class="alert alert-info">You have been logged out.</div>
 					</div>
 					<div class="form-group">
-						<label for="username">Username</label>: <input type="text"
-							th:field="*{email}" name="username" class="form-control"
+						<label for="username">Username</label>: 
+						<input type="text" th:field="*{username}" name="username" class="form-control"
 							autofocus="autofocus" placeholder="Username" />
 
 					</div>
@@ -82,4 +84,4 @@
 		th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 
 </body>
-</html>
+</html> 

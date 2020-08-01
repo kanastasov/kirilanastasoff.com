@@ -22,4 +22,9 @@ public interface UserAccountService  {
 	UserAccount saveDto(UserAccountDto userAccountDto);
 
 	UserAccount findByConfirmationToken(String confirmationToken);
+	
+	UserAccount findUserByUsername(String username);
+	
+	UserAccount findUserAccountByEmail(String email);
+
 }

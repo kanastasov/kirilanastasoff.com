@@ -7,10 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import com.personal.page.service.UserAccountService;
 
 @Configuration
 @EnableWebSecurity
@@ -20,15 +19,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserAccountService userDetailsService;
+    private UserDetailsService userDetailsService;
 
 
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//                auth.userDetailsService((T) userDetailsService)
-//                    .passwordEncoder(bCryptPasswordEncoder);
-//    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+                auth
+                    .userDetailsService(userDetailsService)
+                    .passwordEncoder(bCryptPasswordEncoder);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,7 +41,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers(loginPage).permitAll()
                 .antMatchers("/**").permitAll()
-                .antMatchers("/saveUserAccount").permitAll()
+                .antMatchers("/newUserAccount.html").permitAll()
+                .antMatchers("/registration").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
@@ -51,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/")
                 .failureUrl("/login?error=true")
                 .defaultSuccessUrl("/admin/home")
-                .usernameParameter("user_name")
+                .usernameParameter("username")
                 .passwordParameter("password")
                 .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage))
@@ -64,6 +65,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
-    
-}
 
+}

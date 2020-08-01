@@ -25,7 +25,6 @@
 					<th>Last Name</th>
 					<th>Email</th>
 					<th>Date of Birth</th>
-					<th>password</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -35,7 +34,6 @@
 					<td th:text="${userAccount.lastName}"></td>
 					<td th:text="${userAccount.email}"></td>
 					<td th:text="${userAccount.dateOfBirth}"></td>
-					<td th:text="${userAccount.password}"></td>
 					<td><a th:href="@{/edit/{id}(id=${userAccount.id})}"
 						class="btn btn-primary">Update</a> <a
 						th:href="@{/deleteAccount/{id}(id=${userAccount.id})}"

@@ -11,7 +11,6 @@
 </head>
 
 <body>
-	<div th:replace="fragments/header.html :: myheader"></div>
 	<div class="container">
 		<h1>User Account Management System</h1>
 		<hr>
@@ -34,18 +33,26 @@
 			<p th:if="${#fields.hasErrors('*{email}')}"
 				th:errors="*{email}">Need valid email info</p>
 				
+				
+			<input type="text" th:field="*{username}"
+				placeholder="Username" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{username}')}"
+				th:errors="*{username}">Need valid date</p>
+				
+			<input type="password" th:field="*{password}"
+				placeholder="password" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{password}')}"
+				th:errors="*{password}">Need valid password</p>	
+				
 			<input type="text" th:field="*{dateOfBirth}"
 				placeholder="Date of Birth" class="form-control mb-4 col-4">
 			<p th:if="${#fields.hasErrors('*{dateOfBirth}')}"
 				th:errors="*{dateOfBirth}">Need valid date</p>
-				
-			<input type="text" th:field="*{password}"
-				placeholder="password" class="form-control mb-4 col-4">
-			<p th:if="${#fields.hasErrors('*{password}')}"
-				th:errors="*{password}">Need valid password</p>
 
 			<button type="submit" class="btn btn-info col-2">Save
 				Account</button>
+				
+		<h2><span class="text-success" th:utext="${successMessage}"></span></h2>
 		</form>
 
 		<hr>
@@ -54,4 +61,4 @@
 	</div>
 </body>
 
-</html>
+</html> 

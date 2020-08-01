@@ -3,6 +3,7 @@ package com.personal.page.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -64,7 +65,7 @@ public class UserAccount implements Serializable {
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	private Set<Role> roles;
 
 	@Column(name = "confirmation_token")
 	private String confirmationToken;

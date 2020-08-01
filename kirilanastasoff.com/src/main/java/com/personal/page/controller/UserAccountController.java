@@ -3,6 +3,8 @@ package com.personal.page.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.personal.page.exception.UserAccountNotFoundException;
 import com.personal.page.model.UserAccount;
-import com.personal.page.repository.UserAccountRepository;
 import com.personal.page.service.EmailService;
 import com.personal.page.service.UserAccountService;
 
@@ -37,15 +36,7 @@ public class UserAccountController {
 	public String showAllAcounts(Model model) {
 		model.addAttribute("listUserAccounts", userAccountService.getAllUserAccounts());
 		return "index";
-
 	}
-	
-    @GetMapping(value={"/", "/login"})
-    public ModelAndView login(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
-    }
 
 	// create model attribute to bind form data
 	@GetMapping("/showUserAccountForm")
@@ -57,9 +48,12 @@ public class UserAccountController {
 
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
-		if (userAccountService.findByEmail(account.getEmail()) != null) {
+		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
 			bindingResult.rejectValue("email", "There is already an account with this email");
 		}
+//	if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
+//		bindingResult.rejectValue("email", "There is already an account with this email");
+//	}
 
 		if (bindingResult.hasErrors()) {
 			return "newUserAccount";
@@ -80,17 +74,19 @@ public class UserAccountController {
 		return "updateUserAccount";
 	}
 
+	//todo set username to null when update user
 	@PostMapping("/update/{id}")
 	public String updateUserAccount(@PathVariable("id") long id, @Valid UserAccount userAccount, BindingResult result,
 			Model model) {
+		System.out.println(result + "******************************************");
 		if (result.hasErrors()) {
+			System.out.println(result + "******************************************");
 			userAccount.setId(id);
 			return "updateUserAccount";
 		}
-
 		userAccountService.saveUserAccount(userAccount);
 		model.addAttribute("userAccount", userAccountService.getAllUserAccounts());
-		return "redirect:/?success";
+		return "redirect:/";
 	}
 
 	@GetMapping("/deleteAccount/{id}")
@@ -99,15 +95,22 @@ public class UserAccountController {
 		return "redirect:/";
 	}
 
-//	@GetMapping("/login")
-//	public String login(Model model) {
-//		UserAccount userAccount = new UserAccount();
-//		model.addAttribute("userAccount", userAccount);
-//		return "login";
-//	}
+	@GetMapping("/login")
+	public String login(Model model) {
+		UserAccount userAccount = new UserAccount();
+		model.addAttribute("userAccount", userAccount);
+		return "login";
+	}
 
-	@GetMapping("/403")
-	public String error403() {
-		return "/error/403";
+	@GetMapping(value = "/admin/home")
+	public ModelAndView home() {
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserAccount user = userAccountService.findUserByUsername(auth.getName());
+		modelAndView.addObject("username", "Welcome " + user.getUsername() + "/" + user.getFirstName() + " "
+				+ user.getLastName() + " (" + user.getEmail() + ")");
+		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.setViewName("admin/home");
+		return modelAndView;
 	}
 }
