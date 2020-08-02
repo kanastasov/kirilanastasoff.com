@@ -18,6 +18,8 @@
 
 		<form action="#" th:action="@{/saveUserAccount}" th:object="${userAccount}"
 			method="POST">
+			<img th:src="@{/images/register.png}" class="img-responsive center-block"
+			width="700" height="400" alt="Logo" />
 			<input type="text" th:field="*{firstName}" placeholder="First Name"
 				class="form-control mb-4 col-4">
 			<p th:if="${#fields.hasErrors('*{firstName}')}"
