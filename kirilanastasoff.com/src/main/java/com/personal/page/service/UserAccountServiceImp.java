@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
 
-import com.personal.page.exception.UserAccountNotFoundException;
+import com.personal.page.exception.UserAccountException;
 import com.personal.page.model.Role;
 import com.personal.page.model.UserAccount;
 import com.personal.page.model.dto.UserAccountDto;
@@ -69,13 +69,13 @@ public class UserAccountServiceImp implements UserDetailsService, UserAccountSer
 
 	}
 
-	public UserAccount getUserAccountById(long id) throws UserAccountNotFoundException {
+	public UserAccount getUserAccountById(long id) throws UserAccountException {
 		Optional<UserAccount> optionalAccount = this.userAccountRepository.findById(id);
 		UserAccount userAccount = null;
 		if (optionalAccount.isPresent()) {
 			userAccount = optionalAccount.get();
 		} else {
-			throw new UserAccountNotFoundException(id);
+			throw new UserAccountException(id);
 		}
 
 		return userAccount;

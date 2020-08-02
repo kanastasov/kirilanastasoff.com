@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.personal.page.exception.UserAccountNotFoundException;
+import com.personal.page.exception.UserAccountException;
 import com.personal.page.model.UserAccount;
 import com.personal.page.model.dto.UserAccountDto;
 
@@ -13,7 +13,7 @@ public interface UserAccountService  {
 
 	UserAccount saveUserAccount(UserAccount account);
 
-	UserAccount getUserAccountById(long id) throws UserAccountNotFoundException;
+	UserAccount getUserAccountById(long id) throws UserAccountException;
 
 	void deleteUserAccountById(long id);
 

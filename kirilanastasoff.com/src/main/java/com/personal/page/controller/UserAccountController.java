@@ -3,12 +3,15 @@ package com.personal.page.controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;import java.util.Date;
+import java.nio.file.Paths;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,10 +22,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lowagie.text.DocumentException;
-import com.personal.page.exception.UserAccountNotFoundException;
+import com.personal.page.exception.UserAccountException;
 import com.personal.page.model.UserAccount;
 import com.personal.page.service.EmailService;
 import com.personal.page.service.PdfServiceImp;
@@ -89,7 +94,7 @@ public class UserAccountController {
 		try {
 			userAccount = userAccountService.getUserAccountById(id);
 			model.addAttribute("userAccount", userAccount);
-		} catch (UserAccountNotFoundException e) {
+		} catch (UserAccountException e) {
 			e.printStackTrace();
 		}
 		return "updateUserAccount";
@@ -146,5 +151,14 @@ public class UserAccountController {
 		} catch (DocumentException | IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+	public ResponseEntity<UserAccount> getUserAccountById(@PathVariable("id") long id) throws UserAccountException {
+		UserAccount userAccount = userAccountService.getUserAccountById(id);
+		if (userAccount == null || userAccount.getId() <= 0) {
+			throw new UserAccountException("UserAccount doesn´t exist");
+		}
+		return new ResponseEntity<UserAccount>(userAccountService.getUserAccountById(id), HttpStatus.OK);
 	}
 }
