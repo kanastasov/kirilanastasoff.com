@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.personal.page.model.UserAccount;
+import com.personal.page.model.dto.UserAccountDto;
 import com.personal.page.repository.RoleRepository;
 import com.personal.page.repository.UserAccountRepository;
 
@@ -58,8 +59,9 @@ public class UserAccountServiceImpTest {
 		// Setup
 		final String email = "test@test.com";
 
+		
 		// Run the test
-		UserAccount result = userServiceUnderTest.saveUserAccount(UserAccount.builder().id(1).email("test@test.com").build());
+		UserAccount result = userServiceUnderTest.saveUserAccount(UserAccount.builder().email("test@test.com").build());
 
 		// Verify the results
 		assertEquals(email, result.getEmail());

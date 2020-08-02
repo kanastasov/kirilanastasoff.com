@@ -38,7 +38,7 @@ public class UserAccount implements Serializable {
 	private static final long serialVersionUID = 1006867765376901113L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@NotNull(message = "first name cannot be null")
@@ -56,8 +56,8 @@ public class UserAccount implements Serializable {
 	private String email;
 
 	@NotNull(message = "date of birth cannot be null")
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	@JsonFormat(pattern = "MM/dd/yyyy")
+//	@JsonFormat(pattern = "MM/dd/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateOfBirth;
 	@Column(name = "password")
 	private String password;

@@ -21,20 +21,42 @@
 			th:object="${userAccount}" method="POST">
 
 			<!-- Add hidden form field to handle update -->
-			<input type="hidden" th:field="*{id}" /> <input type="text"
-				th:field="*{firstName}" class="form-control mb-4 col-4"> <input
-				type="text" th:field="*{lastName}" class="form-control mb-4 col-4">
+			<input type="hidden" th:field="*{id}" />
+			
+			
+			<input type="text" th:field="*{firstName}" placeholder="First Name"
+				class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{firstName}')}"
+				th:errors="*{firstName}">Need valid first name</p>
 
-			<input type="text" th:field="*{email}"
-				class="form-control mb-4 col-4"> 
-				<input type="text"
-				th:field="*{dateOfBirth}" class="form-control mb-4 col-4">
-						<input type="text"
-				th:field="*{password}" class="form-control mb-4 col-4">
+			<input type="text" th:field="*{lastName}" placeholder="Last Name"
+				class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{lastName}')}"
+				th:errors="*{lastName}">Need valid last name</p>
+
+			<input type="text" th:field="*{email}" placeholder="Email"
+				class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{email}')}"
+				th:errors="*{email}">Need valid email info</p>
+				
+			<input type="text" th:field="*{username}"
+				placeholder="Username" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{username}')}"
+				th:errors="*{username}">Need valid date</p>
+				
+			<input type="password" th:field="*{password}"
+				placeholder="password" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{password}')}"
+				th:errors="*{password}">Need valid password</p>	
+				
+			<input type="text" th:field="*{dateOfBirth}"
+				placeholder="Date of Birth" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{dateOfBirth}')}"
+				th:errors="*{dateOfBirth}">Need valid date</p>
+
+			
 			<button type="submit" class="btn btn-info col-2">Update
 				Employee</button>
-
-
 		</form>
 
 		<hr>

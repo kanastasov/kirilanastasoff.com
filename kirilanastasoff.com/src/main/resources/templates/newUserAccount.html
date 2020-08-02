@@ -20,6 +20,7 @@
 			method="POST">
 			<img th:src="@{/images/register.png}" class="img-responsive center-block"
 			width="700" height="400" alt="Logo" />
+			
 			<input type="text" th:field="*{firstName}" placeholder="First Name"
 				class="form-control mb-4 col-4">
 			<p th:if="${#fields.hasErrors('*{firstName}')}"
@@ -35,6 +36,10 @@
 			<p th:if="${#fields.hasErrors('*{email}')}"
 				th:errors="*{email}">Need valid email info</p>
 				
+			<input type="text" th:field="*{confirmEmail}" placeholder="Confirm Email"
+				class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{confirmEmail}')}"
+				th:errors="*{confirmEmail}">Confirm Email need to be same as email</p>	
 				
 			<input type="text" th:field="*{username}"
 				placeholder="Username" class="form-control mb-4 col-4">
@@ -46,10 +51,26 @@
 			<p th:if="${#fields.hasErrors('*{password}')}"
 				th:errors="*{password}">Need valid password</p>	
 				
+							<input type="password" th:field="*{confirmPassword}"
+				placeholder="confirm Password" class="form-control mb-4 col-4">
+			<p th:if="${#fields.hasErrors('*{confirmPassword}')}"
+				th:errors="*{confirmPassword}">Need valid confirm Password</p>	
+				
 			<input type="text" th:field="*{dateOfBirth}"
 				placeholder="Date of Birth" class="form-control mb-4 col-4">
 			<p th:if="${#fields.hasErrors('*{dateOfBirth}')}"
 				th:errors="*{dateOfBirth}">Need valid date</p>
+
+		      <input  type="checkbox" th:field="*{terms}" />   
+		      <label class="control-label" for="terms"> I agree with the <a
+		       href="#">terms and conditions</a> for Registration.
+		      </label>
+		    <p th:if="${#fields.hasErrors('*{terms}')}"
+				th:errors="*{terms}">Need valid terms</p>
+
+
+
+
 
 			<button type="submit" class="btn btn-info col-2">Save
 				Account</button>

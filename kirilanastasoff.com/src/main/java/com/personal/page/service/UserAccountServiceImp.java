@@ -58,15 +58,22 @@ public class UserAccountServiceImp implements UserDetailsService, UserAccountSer
 	}
 
 	//todo set username to null when update user
-	public UserAccount saveUserAccount(UserAccount account) {
-		account.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
+	public UserAccount saveUserAccount(UserAccount accountDto) {
+		UserAccount account = new UserAccount();
+		account.setId(accountDto.getId());
+  		account.setFirstName(accountDto.getFirstName());
+		account.setLastName(accountDto.getLastName());
+		account.setEmail(accountDto.getEmail());
+		account.setDateOfBirth(accountDto.getDateOfBirth());
+		account.setPassword(bCryptPasswordEncoder.encode(accountDto.getPassword()));
+		account.setUsername(accountDto.getUsername());
 		account.setEnabled(true);
 		account.setActive(true);
+		
 		Role userRole = roleRepository.findByRole("ADMIN");
 		account.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		this.userAccountRepository.save(account);
 		return account;
-
 	}
 
 	public UserAccount getUserAccountById(long id) throws UserAccountException {

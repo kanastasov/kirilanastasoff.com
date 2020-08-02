@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.lowagie.text.DocumentException;
 import com.personal.page.exception.UserAccountException;
 import com.personal.page.model.UserAccount;
+import com.personal.page.model.dto.UserAccountDto;
 import com.personal.page.service.EmailService;
 import com.personal.page.service.PdfServiceImp;
 import com.personal.page.service.UserAccountService;
@@ -57,6 +58,11 @@ public class UserAccountController {
 		this.bCryptPasswordEncode = bCryptPasswordEncode;
 		this.pdfService = pdfService;
 	}
+	
+    @ModelAttribute("userdto")
+    public UserAccountDto userRegistrationDto() {
+        return new UserAccountDto();
+    }
 
 	@GetMapping("/")
 	public String showAllAcounts(Model model) {
@@ -74,13 +80,10 @@ public class UserAccountController {
 
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
-		if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
+		UserAccount user = userAccountService.findUserAccountByEmail(account.getEmail());
+		if (user != null) {
 			bindingResult.rejectValue("email", "There is already an account with this email");
 		}
-//	if (userAccountService.findUserAccountByEmail(account.getEmail()) != null) {
-//		bindingResult.rejectValue("email", "There is already an account with this email");
-//	}
-
 		if (bindingResult.hasErrors()) {
 			return "newUserAccount";
 		}
@@ -105,7 +108,6 @@ public class UserAccountController {
 	public String updateUserAccount(@PathVariable("id") long id, @Valid UserAccount userAccount, BindingResult result,
 			Model model) {
 		if (result.hasErrors()) {
-			userAccount.setId(id);
 			return "updateUserAccount";
 		}
 		userAccountService.saveUserAccount(userAccount);
