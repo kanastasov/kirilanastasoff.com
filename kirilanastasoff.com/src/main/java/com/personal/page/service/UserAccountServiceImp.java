@@ -27,6 +27,8 @@ import com.personal.page.model.dto.UserAccountDto;
 import com.personal.page.repository.RoleRepository;
 import com.personal.page.repository.UserAccountRepository;
 
+import java.time.LocalDate;
+
 @Service
 public class UserAccountServiceImp implements UserDetailsService, UserAccountService {
 
@@ -67,6 +69,8 @@ public class UserAccountServiceImp implements UserDetailsService, UserAccountSer
 		account.setDateOfBirth(accountDto.getDateOfBirth());
 		account.setPassword(bCryptPasswordEncoder.encode(accountDto.getPassword()));
 		account.setUsername(accountDto.getUsername());
+		account.setDateRegistered(LocalDate.now());
+		account.setCountryOfOrigin(accountDto.getCountryOfOrigin());
 		account.setEnabled(true);
 		account.setActive(true);
 		

@@ -76,5 +76,14 @@ public class UserAccount implements Serializable {
 	private String username;
 	@Column(name = "active")
 	private boolean active;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "date_registered")
+	private LocalDate dateRegistered;
+	
+	@Column(name = "country_of_origin")
+	private String countryOfOrigin;
+	
+	
 
 }
