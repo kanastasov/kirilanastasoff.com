@@ -11,61 +11,45 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+	}
 
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-                auth
-                    .userDetailsService(userDetailsService)
-                    .passwordEncoder(bCryptPasswordEncoder);
-    }
+		String loginPage = "/login";
+		String logoutPage = "/logout";
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/").permitAll().antMatchers(loginPage).permitAll().antMatchers("/**")
+				.permitAll().antMatchers("/rest/hello").permitAll()
+		         .antMatchers("/unsecured", "/swagger-ui/**", "/reflectoring-openapi/**").permitAll()
+				.antMatchers("/pdf_userAccounts").permitAll().antMatchers("/newUserAccount.html").permitAll()
+				.antMatchers("/download-pdf").permitAll().antMatchers("/registration").permitAll()
+				.antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest().authenticated().and().csrf().disable()
+				.formLogin().loginPage(loginPage).loginPage("/").failureUrl("/login?error=true")
+				.defaultSuccessUrl("/admin/home").usernameParameter("username").passwordParameter("password").and()
+				.logout().logoutRequestMatcher(new AntPathRequestMatcher(logoutPage)).logoutSuccessUrl(loginPage).and()
+				.exceptionHandling();
+	}
 
-        String loginPage = "/login";
-        String logoutPage = "/logout";
-
-        http.
-                authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers(loginPage).permitAll()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/pdf_userAccounts").permitAll()
-                .antMatchers("/newUserAccount.html").permitAll()
-                .antMatchers("/download-pdf").permitAll()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .anyRequest()
-                .authenticated()
-                .and().csrf().disable()
-                .formLogin()
-                .loginPage(loginPage)
-                .loginPage("/")
-                .failureUrl("/login?error=true")
-                .defaultSuccessUrl("/admin/home")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage))
-                .logoutSuccessUrl(loginPage).and().exceptionHandling();
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
-    }
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
+				"/configuration/security", "/swagger-ui.html", "/webjars/**", "/resources/**", "/static/**", "/css/**",
+				"/js/**", "/images/**");
+	}
 
 }

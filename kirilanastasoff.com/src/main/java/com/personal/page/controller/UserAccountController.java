@@ -34,9 +34,16 @@ import com.personal.page.service.EmailService;
 import com.personal.page.service.PdfServiceImp;
 import com.personal.page.service.UserAccountService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Controller
+@Api(value = "UserAccountController", description = "userAccountService")
 public class UserAccountController {
 
+	
 	@Autowired
 	private UserAccountService userAccountService;
 
@@ -59,11 +66,21 @@ public class UserAccountController {
 		this.pdfService = pdfService;
 	}
 	
+	
+    @ApiOperation(value = "Returns Hello World")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 100, message = "100 is the message"),
+                    @ApiResponse(code = 200, message = "Successful Hello World")
+            }
+    )
+    
     @ModelAttribute("userdto")
     public UserAccountDto userRegistrationDto() {
         return new UserAccountDto();
     }
 
+    @ApiOperation(value = "Returns the users")
 	@GetMapping("/")
 	public String showAllAcounts(Model model) {
 		model.addAttribute("listUserAccounts", userAccountService.getAllUserAccounts());
@@ -71,13 +88,15 @@ public class UserAccountController {
 	}
 
 	// create model attribute to bind form data
+    @ApiOperation(value = "Returns the users")
 	@GetMapping("/showUserAccountForm")
 	public String showUserAccountForm(Model model) {
 		UserAccount userAccount = new UserAccount();
 		model.addAttribute("userAccount", userAccount);
 		return "newUserAccount";
 	}
-
+    
+    @ApiOperation(value = "Returns the users")
 	@PostMapping("/saveUserAccount")
 	public String saveAccount(@ModelAttribute("userAccount") @Valid UserAccount account, BindingResult bindingResult) {
 		UserAccount user = userAccountService.findUserAccountByEmail(account.getEmail());
